@@ -31,6 +31,13 @@ Install [Docker](https://www.docker.com/) and run this command:
 
 That's it. The website should be hosted at `localhost:8080`. The port can be remapped via docker.
 
+#### Hosting on Archlinux using the AUR package
+[Download, build and install](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_and_upgrading_packages) the [earthwalker-git](https://aur.archlinux.org/packages/earthwalker-git/) package. Then start it via:
+
+    $ sudo systemctl start earthwalker.service
+
+You can then access the website at `http://localhost:8080`. You can configure earthwalker (e.g. the port) by editing `/etc/earthwalker/config.toml`. Check out [Using systemctl](https://wiki.archlinux.org/index.php/Systemd#Basic_systemctl_usage) for more information on how to manage the server.
+
 #### Hosting on Linux or the Windows Subsystem for Linux (WSL) manually (without Docker)
 
 Start by installing [Git](https://git-scm.com/), [Go](https://golang.org/) and [node](https://nodejs.org/en/download/).
