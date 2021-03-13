@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import Tags from 'svelte-tags-input';
     import { loc, ewapi, globalMap } from './stores.js';
+    import "leaflet-lasso";
 
     const NOMINATIM_URL = (locStringEncoded) => `https://nominatim.openstreetmap.org/search?q=${locStringEncoded}&polygon_geojson=1&limit=5&polygon_threshold=0.005&format=json`;
 
@@ -26,7 +27,10 @@
 
     let locStrings = [];
     let oldLocStrings = [];
+
+    let userdrawnPolygons = [];
     
+    let lasso;
     let previewMap;
     let previewPolyGroup;
     let advancedHidden = true;
@@ -39,6 +43,8 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors, <a href="https://wikitech.wikimedia.org/wiki/Wikitech:Cloud_Services_Terms_of_use">Wikimedia Cloud Services</a>'
         }).addTo(previewMap);
         previewPolyGroup = L.layerGroup().addTo(previewMap);
+        lasso = L.lasso(previewMap);
+        previewMap.on('lasso.finished', handleLassoFinish);
     });
 
     // collates createmap form data into a JSON object, 
@@ -79,7 +85,17 @@
         if (locString != oldLocString) {
             submitDisabled = true;
             oldLocString = locString;
-            updatePolygonFromLocString();
+            updatePolygon();
+        }
+    }
+
+    function handleLassoFinish(event) {
+        let drawnPolygon = event.latLngs.map( coordinate => [coordinate.lng, coordinate.lat]);
+
+        // Polygons with less than three points do not have an area
+        if(drawnPolygon.length > 2){
+            userdrawnPolygons.push(drawnPolygon);
+            updatePolygon();
         }
     }
 
@@ -95,14 +111,28 @@
         }
     }
 
-    async function updatePolygonFromLocStrings() {
+    async function updatePolygon(){
         submitDisabled = true;
         oldLocStrings = locStrings;
         
         mapSettings.Polygon = null;
-        if (locStrings.length == 0) {
+
+        await updatePolygonFromLocStrings();
+        updatePolygonFromUserdrawnPolygons();
+
+        if(mapSettings.Polygon){
+            mapSettings.Area = turf.area(mapSettings.Polygon);
+        }
+        else{
             mapSettings.Area = 0;
-            showPolygonOnMap();
+        }
+
+        showPolygonOnMap();
+        submitDisabled = false;
+    }
+
+    async function updatePolygonFromLocStrings() {
+        if (locStrings.length == 0) {
             return;
         }
 
@@ -133,13 +163,21 @@
             } // else { // TODO: no polygon, alert user }
         }
 
-        if (mapSettings.Polygon) {
-            mapSettings.Area = turf.area(mapSettings.Polygon);
-        } else {
+        if (mapSettings.Polygon == null) {
             alert("No results found for the given location string(s)!");
         }
-        showPolygonOnMap();
-        submitDisabled = false;
+    }
+
+    
+    function updatePolygonFromUserdrawnPolygons() {
+        for (let i = 0; i < userdrawnPolygons.length; i++) {
+            let curPolygon = turf.multiPolygon([[userdrawnPolygons[i]]]);
+            if (mapSettings.Polygon) {
+                mapSettings.Polygon.geometry.coordinates.push(...curPolygon.geometry.coordinates);
+            } else {
+                mapSettings.Polygon = curPolygon;
+            }
+        }
     }
 
     // given Nominatim results, takes the most significant one with a polygon or
@@ -347,7 +385,7 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text">Location string </div>
                         </div>
-                        <Tags bind:tags={locStrings} on:tags={updatePolygonFromLocStrings}/>
+                        <Tags bind:tags={locStrings} on:tags={updatePolygon}/>
                     </div>
                     <small class="form-text text-muted">
                         Constrain the game to the specified places - countries, states, cities, neighborhoods, or any other bounded areas.  
@@ -355,6 +393,21 @@
                     </small>
                     <div class="card bg-danger text-white mt-1" id="error-dialog" hidden>
                         <p class="card-text">Sorry, that does not seem like a valid bounding box on OSM Nominatim.</p>
+                    </div>
+                    <div class="btn-toolbar mt-3">
+                        <div class="btn-group mr-2">
+                            <button class="btn btn-outline-info" type="button" on:click={() => {lasso.enable()}}>
+                                Add area by drawing
+                            </button>
+                            <button class="btn btn-outline-danger" type="button" on:click={() => {userdrawnPolygons.pop(); updatePolygon()}}>
+                                Undo
+                            </button>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-danger" type="button" on:click={() => {userdrawnPolygons = []; updatePolygon()}}>
+                                Clear all drawn areas
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div id="bounds-map" style="width: 80%; height: 50vh; margin-left: 10%; margin-right: 10%;"></div>
