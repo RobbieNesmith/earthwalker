@@ -1,4 +1,5 @@
 earthwalker
+earthwalker.exe
 badger/
 
 __debug_bin
@@ -12,4 +13,4 @@ start.sh
 **.sst
 config.toml
 
-public/build/*
+public

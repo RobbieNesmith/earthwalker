@@ -1,5 +1,5 @@
 <script>
-    import { globalMap } from '../stores.js';
+    import { globalMap } from '../../js/stores.js';
 </script>
 
 <main>

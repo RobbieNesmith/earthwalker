@@ -1,5 +1,5 @@
 <script>
-    import { loc, globalChallenge, globalResult } from './stores.js';
+    import { loc, globalChallenge, globalResult } from '../js/stores.js';
 </script>
 
 <main>

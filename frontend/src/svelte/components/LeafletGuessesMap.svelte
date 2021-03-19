@@ -1,6 +1,7 @@
 <script>
     import {onMount} from 'svelte';
-    import { loc, ewapi, globalMap, globalChallenge } from '../stores.js';
+    import { loc, ewapi, globalMap, globalChallenge } from '../../js/stores.js';
+    import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../../js/earthwalker';
 
     export let displayedResult, showAll, curRound;
 

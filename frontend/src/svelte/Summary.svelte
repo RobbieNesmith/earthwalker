@@ -3,10 +3,12 @@
     //       (also a bit in Modify.svelte)
     //       consolidate.
     import {onMount} from 'svelte';
-    import { loc, ewapi, globalMap, globalChallenge, globalResult } from './stores.js';
+    import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
     import LeafletGuessesMap from './components/LeafletGuessesMap.svelte';
     import Leaderboard from './components/Leaderboard.svelte';
-    import utils from './utils';
+    import utils from '../js/utils';
+    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood } from '../js/get_places';
+    import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../js/earthwalker';
 
     let displayedResult;
     let allResults = [];

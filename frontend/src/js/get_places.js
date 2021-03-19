@@ -14,6 +14,9 @@
 //       cookies storing the ChallengeID and ChallengeResultID, then redirect
 //       to /play.
 
+import turf from '@turf/turf';
+import GeoTIFF from 'geotiff';
+
 // search radius in meters - using 500 (formerly 50,000) causes more NO_RESULTS
 // responses, but the API also takes much less time to fulfill the requests.
 // It also means we can use StreetViewPreference.BEST without so many duplicate
@@ -33,14 +36,14 @@ const MAX_LATLNG_ATTEMPTS = 1000000;
 // TODO: can we find another way to do population density?
 //       This TIF is 6.5mb.
 //       At minimum, cache it.
-async function loadGeoTIF(loc) {
+export async function loadGeoTIF(loc) {
     const response = await fetch("/public/nasa_pop_data.tif");
     const arrayBuffer = await response.arrayBuffer();
     return await GeoTIFF.fromArrayBuffer(arrayBuffer);
 }
 
 // get normalized (0.0 - 1.0) population density at lat, lng
-async function getLocationPopulation(popTIF, lat, lng) {
+export async function getLocationPopulation(popTIF, lat, lng) {
     const delta = 0.01;
     let value = await popTIF.readRasters({
         bbox: [lng, lat, lng + 10*delta, lat + 10*delta],
@@ -56,7 +59,7 @@ async function getLocationPopulation(popTIF, lat, lng) {
 }
 
 // == GET PANOS ========
-async function fetchPanos(svService, settings, popTIF, incrNumReqsCallback = () => {}) {
+export async function fetchPanos(svService, settings, popTIF, incrNumReqsCallback = () => {}) {
     const promises = [];
     for (let i = 0; i < settings.NumRounds; i++) {
         promises.push(fetchPano(svService, settings, popTIF, incrNumReqsCallback));
@@ -65,7 +68,7 @@ async function fetchPanos(svService, settings, popTIF, incrNumReqsCallback = () 
     return foundLatLngs;
 }
 
-async function fetchPano(svService, settings, popTIF, incrNumReqsCallback) {
+export async function fetchPano(svService, settings, popTIF, incrNumReqsCallback) {
     let source = settings.Source == 1 ? google.maps.StreetViewSource.OUTDOOR : google.maps.StreetViewSource.DEFAULT;
     let randomLatLng;
     let foundLatLng = null;
@@ -100,7 +103,7 @@ async function fetchPano(svService, settings, popTIF, incrNumReqsCallback) {
 }
 
 // returns whether result (pano) meets the requirements of mapInfo
-function resultPanoIsGood(result, settings) {
+export function resultPanoIsGood(result, settings) {
     if (result.location.latLng.lat() > LAT_LIMIT || result.location.latLng.lat() < -1 * LAT_LIMIT) {return false;}
 
     if (settings.Copyright == 1 && !result.copyright.includes("Google")) {
@@ -130,7 +133,7 @@ function resultPanoIsGood(result, settings) {
 
 // get a random google.maps.LatLng within the specified polygon and with
 // a population density in the specified range
-async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, maxDensity) {
+export async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, maxDensity) {
     // TODO: function assignment as control flow is heinous
     let getRandomLngLatInBounds;
     let pointInPolygon;
@@ -167,7 +170,7 @@ async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, maxDensit
 }
 
 // get a random google.maps.LatLng, anywhere
-function getRandomLngLat() {
+export function getRandomLngLat() {
     let randomLng = (Math.random() * 360 - 180);
     let randomLat = (Math.random() * 180 - 90);
     return [randomLng, randomLat];

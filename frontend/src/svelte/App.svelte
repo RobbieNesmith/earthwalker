@@ -2,7 +2,9 @@
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 
-	import { loc, ewapi, globalMap, globalChallenge, globalResult } from './stores.js';
+	import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+	import "../../node_modules/leaflet/dist/leaflet.css";
+	import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
 
 	import CreateMap from './CreateMap.svelte'
 	import CreateChallenge from './CreateChallenge.svelte'

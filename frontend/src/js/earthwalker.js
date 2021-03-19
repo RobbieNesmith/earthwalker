@@ -2,6 +2,8 @@
 // for the database API.
 // TODO: consider dividing this into multiple files.
 
+import turf from '@turf/turf';
+
 // == common functions ========
 
 const challengeCookieName = "earthwalker_lastChallenge";
@@ -9,7 +11,7 @@ const resultCookiePrefix = "earthwalker_lastResult_";
 
 // getChallengeID from the URL (key: "id"), else get the value of cookie
 // lastChallenge, else null
-function getChallengeID() {
+export function getChallengeID() {
     let id = getURLParam("id");
     if (id) {
         return id;
@@ -18,12 +20,12 @@ function getChallengeID() {
 }
 
 // getChallengeResultID from cookie resultCookiePrefix+challengeID, else null
-function getChallengeResultID(challengeID) {
+export function getChallengeResultID(challengeID) {
     return getCookieValue(resultCookiePrefix+challengeID);
 }
 
 // return value of url param with key, else null
-function getURLParam(key) {
+export function getURLParam(key) {
     let params = new URLSearchParams(window.location.search)
     if (!params.has(key)) {
         return;
@@ -32,7 +34,7 @@ function getURLParam(key) {
 }
 
 // getCookieValue with specified name, else null
-function getCookieValue(name) {
+export function getCookieValue(name) {
     let cookies = document.cookie.split("; ");
     let cookie = cookies.find(row => row.startsWith(name));
     if (cookie) {
@@ -44,7 +46,7 @@ function getCookieValue(name) {
 // == Leaflet Map ========
 
 // 0 <= hue int < 360
-function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus = false) {
+export function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus = false) {
     let guessPoint = turf.point([guess.Location.Lng, guess.Location.Lat]);
     let actualPoint = turf.point([actual.Location.Lng, actual.Location.Lat]);
 
@@ -76,7 +78,7 @@ let makeIcon = function(text, hue) {
     });
 };
 
-function svgIcon(text, hue) {
+export function svgIcon(text, hue) {
     return `data:image/svg+xml,
     <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 0 24 24" width="48px">
         <path fill="hsl(${hue}, 90%, 40%)" stroke="black" stroke-width="0.5px" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0"/>
@@ -86,7 +88,7 @@ function svgIcon(text, hue) {
     </svg>`
 }
 
-function showPolygonOnMap(layer, polygon) {
+export function showPolygonOnMap(layer, polygon) {
     layer.clearLayers();
     return L.geoJSON(polygon, {
         style: {
@@ -109,7 +111,7 @@ const decayBase = 2;
 const halfDistance = 1000000;
 
 // [score, distance] given location of guess and pano, graceDistance, and Polygon area
-function calcScoreDistance(guess, actual, graceDistance=0, area=earthArea) {
+export function calcScoreDistance(guess, actual, graceDistance=0, area=earthArea) {
     // TODO: cleaner handling of maps with no Polygon (maybe give maps area earthArea on creation?)
     if (area == 0) {
         area = earthArea;
@@ -131,7 +133,7 @@ function calcScoreDistance(guess, actual, graceDistance=0, area=earthArea) {
 
 // totalScore given _ordered_ arrays of {Lat, Lng}.
 // actuals must be at least as long as guesses
-function calcTotalScore(guesses, actuals, graceDistance=0, area=earthArea) {
+export function calcTotalScore(guesses, actuals, graceDistance=0, area=earthArea) {
     let totalScore = 0;
     let currentScore;
     guesses.forEach((guess, i) => {
@@ -142,7 +144,7 @@ function calcTotalScore(guesses, actuals, graceDistance=0, area=earthArea) {
 }
 
 // returns a prettified distance given float meters
-function distString(meters) {
+export function distString(meters) {
     if (meters < 1000) {
         return (meters).toFixed(1) + " m";
     }
@@ -154,7 +156,7 @@ function distString(meters) {
 // helpers
 
 // gets object from the given URL, else null
-async function getObject(url) {
+export async function getObject(url) {
     let response = await fetch(url);
     if (response.ok) {
         return response.json();
@@ -165,7 +167,7 @@ async function getObject(url) {
 }
 
 // posts object to the given URL, returns response object else null
-async function postObject(url, object) {
+export async function postObject(url, object) {
     let response = await fetch(url, {
         method: "POST",
         headers: {
@@ -181,7 +183,7 @@ async function postObject(url, object) {
     return {}
 }
 
-function orderRounds(arrWithRoundNums) {
+export function orderRounds(arrWithRoundNums) {
     return arrWithRoundNums.sort((a, b) => a.RoundNum - b.RoundNum);
 }
 

@@ -2,7 +2,11 @@
     // TODO: svelteify this file
     import { onMount } from 'svelte';
     import Tags from 'svelte-tags-input';
-    import { loc, ewapi, globalMap } from './stores.js';
+    import turf from '@turf/turf';
+    import { loc, ewapi, globalMap } from '../js/stores.js';
+    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood} from '../js/get_places';
+    import {calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, svgIcon} from '../js/earthwalker';
+    import "../../node_modules/leaflet/dist/leaflet.css";
 
     const NOMINATIM_URL = (locStringEncoded) => `https://nominatim.openstreetmap.org/search?q=${locStringEncoded}&polygon_geojson=1&limit=5&polygon_threshold=0.005&format=json`;
 
@@ -368,6 +372,6 @@
         <button id="submit-button" type="submit" class="btn btn-primary" style="margin-bottom: 2em;" disabled={submitDisabled}>Create Map</button>
 
     </form>
-    <link rel="stylesheet" href="public/leaflet/leaflet.css"/>
+    <!-- <link rel="stylesheet" href="public/leaflet/leaflet.css"/> -->
     </div>
 </main>
