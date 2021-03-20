@@ -5,6 +5,7 @@
     import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
     import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood } from '../js/get_places';
     import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../js/earthwalker';
+    import L from 'leaflet';
     import '../modify_frontend/modify.css'
 
     // data fetched from server
