@@ -2,7 +2,7 @@
 // for the database API.
 // TODO: consider dividing this into multiple files.
 
-import {point, greatCircle, flip, getCoords, distance} from '@turf/turf';
+import {point, greatCircle as turfGreatCircle, flip, getCoords, distance as turfDistance} from '@turf/turf';
 
 // == common functions ========
 
@@ -50,7 +50,7 @@ export function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focu
     let guessPoint = point([guess.Location.Lng, guess.Location.Lat]);
     let actualPoint = point([actual.Location.Lng, actual.Location.Lat]);
 
-    let greatCircle = greatCircle(guessPoint, actualPoint);
+    let greatCircle = turfGreatCircle(guessPoint, actualPoint);
     greatCircle = flip(greatCircle);
 
     let polyline = L.polyline(getCoords(greatCircle), { color: '#007bff' }).addTo(map);
@@ -122,7 +122,7 @@ export function calcScoreDistance(guess, actual, graceDistance=0, area=earthArea
     }
     let guessPoint = point([guess.Location.Lng, guess.Location.Lat]);
     let actualPoint =  point([actual.Location.Lng, actual.Location.Lat]);
-    let distance = distance(guessPoint, actualPoint, {units: "kilometers"}) * 1000.0;
+    let distance = turfDistance(guessPoint, actualPoint, {units: "kilometers"}) * 1000.0;
     if (distance < graceDistance) {
         return [maxScore, distance];
     }

@@ -4,8 +4,6 @@
     import Tags from 'svelte-tags-input';
     import { area, multiPolygon } from '@turf/turf';
     import { loc, ewapi, globalMap } from '../js/stores.js';
-    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood} from '../js/get_places';
-    import {calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, svgIcon} from '../js/earthwalker';
     import L from 'leaflet';
     import "../../node_modules/leaflet/dist/leaflet.css";
 

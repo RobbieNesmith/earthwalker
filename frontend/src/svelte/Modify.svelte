@@ -2,9 +2,8 @@
     // TODO: this file is getting out of hand
 
     import { onMount } from 'svelte';
-    import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
-    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood } from '../js/get_places';
-    import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../js/earthwalker';
+    import { ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
+    import { calcTotalScore, showPolygonOnMap } from '../js/earthwalker';
     import L from 'leaflet';
     import '../modify_frontend/modify.css'
 

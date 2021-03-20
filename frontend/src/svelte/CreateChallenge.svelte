@@ -1,8 +1,8 @@
 <script>
     import { onMount } from 'svelte';
-    import { loc, ewapi, globalMap, globalResult } from '../js/stores.js';
-    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood} from '../js/get_places';
-    import {calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon} from '../js/earthwalker';
+    import { ewapi, globalMap, globalResult } from '../js/stores.js';
+    import { loadGeoTIF, fetchPanos } from '../js/get_places';
+    import { getURLParam } from '../js/earthwalker';
     import MapInfo from './components/MapInfo.svelte';
     import utils from '../js/utils';
 

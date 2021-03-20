@@ -2,7 +2,7 @@
     export let displayedResult = null;
     export let allResults;
     export let curRound;
-    import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../../js/earthwalker';
+    import { distString, svgIcon } from '../../js/earthwalker';
 
     $: console.log(allResults);
 </script>

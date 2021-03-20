@@ -3,8 +3,7 @@
     import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
     import LeafletGuessesMap from './components/LeafletGuessesMap.svelte';
     import Leaderboard from './components/Leaderboard.svelte';
-    import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood } from '../js/get_places';
-    import { calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, showPolygonOnMap, svgIcon } from '../js/earthwalker';
+    import { calcScoreDistance, distString, svgIcon } from '../js/earthwalker';
 
     // data
     let allResults = [];
