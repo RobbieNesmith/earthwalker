@@ -17,15 +17,12 @@ const BUILD_DIR = '../public';
 function hashStatic() {
 	return {
 		name: "hash-static",
-		//   buildStart() {
-		// 	rimraf.sync(OUT_DIR);
-		//   },
 		writeBundle() {
 			const hashHandler = posthtml().use(
 				// hashes `bundle.[custom-hash].css` and `bundle.[custom-hash].js`
-				hash({ 
-					path: BUILD_DIR, 
-					pattern: new RegExp(/\[custom-hash\]/), 
+				hash({
+					path: BUILD_DIR,
+					pattern: new RegExp(/\[custom-hash\]/),
 					transformPath: (filepath) => filepath.replace('/public/', ""),
 				}),
 			)
@@ -53,12 +50,14 @@ export default {
 		entryFileNames: '[name]-[custom-hash].js',
 	},
 	plugins: [
-		copy({ targets: [
-			{ src: "src/index.html", dest: BUILD_DIR },
-			{ src: "src/modify_frontend/*", dest: `${BUILD_DIR}/modify_frontend` },
-			{ src: "src/assets", dest: `${BUILD_DIR}` },
-			{ src: "node_modules/leaflet/dist/images", dest: `${BUILD_DIR}` },
-		] }),
+		copy({
+			targets: [
+				{ src: "src/index.html", dest: BUILD_DIR },
+				{ src: "src/modify_frontend/*", dest: `${BUILD_DIR}/modify_frontend` },
+				{ src: "src/assets", dest: `${BUILD_DIR}` },
+				{ src: "node_modules/leaflet/dist/images", dest: `${BUILD_DIR}` },
+			]
+		}),
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production
@@ -70,7 +69,6 @@ export default {
 		// a separate file - better for performance
 		css({
 			output: 'bundle-[custom-hash].css',
-
 		}),
 
 		// If you have external dependencies installed from
@@ -85,8 +83,6 @@ export default {
 		}),
 		commonjs(),
 
-
-
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
 		!production && serve(),
@@ -98,6 +94,8 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
+
+		// Replace [custom-hash] in files with an actual hash
 		production && hashStatic(),
 	],
 	watch: {
