@@ -449,7 +449,7 @@
         <div id="controls">
             <div id="settings-button" class="btn-group btn-group-sm float-right">
                 <button class="btn btn-light" on:click={() => {showSettings = !showSettings;}}>
-                    <img alt="Map Settings" src="/public/icons/settings.svg" style="width: auto; height: 1rem;"/>
+                    <img alt="Map Settings" src="/public/assets/settings.svg" style="width: auto; height: 1rem;"/>
                 </button>
             </div>
             <div id="navigation-bar" class="btn-group btn-group-sm float-right">

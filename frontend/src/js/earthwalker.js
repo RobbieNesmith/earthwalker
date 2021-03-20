@@ -72,7 +72,7 @@ let makeIcon = function(text, hue) {
     iconUrl: svgIcon(text, hue),
     iconSize: [48, 48],
     iconAnchor: [24, 44],
-    shadowUrl: "public/leaflet/images/marker-shadow.png",
+    shadowUrl: "public/images/marker-shadow.png",
     shadowSize: [41, 41],
     shadowAnchor: [12, 41]
     });

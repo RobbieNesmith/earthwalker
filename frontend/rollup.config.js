@@ -55,7 +55,9 @@ export default {
 	plugins: [
 		copy({ targets: [
 			{ src: "src/index.html", dest: BUILD_DIR },
-			{ src: "src/modify_frontend/*", dest: `${BUILD_DIR}/modify_frontend` }
+			{ src: "src/modify_frontend/*", dest: `${BUILD_DIR}/modify_frontend` },
+			{ src: "src/assets", dest: `${BUILD_DIR}` },
+			{ src: "node_modules/leaflet/dist/images", dest: `${BUILD_DIR}` },
 		] }),
 		svelte({
 			compilerOptions: {
