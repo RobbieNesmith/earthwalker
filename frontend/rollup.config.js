@@ -8,31 +8,38 @@ import fs from "fs";
 import posthtml from "posthtml";
 import { hash } from "posthtml-hash";
 import copy from "rollup-plugin-copy";
-import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 
 const production = !process.env.ROLLUP_WATCH;
 const BUILD_DIR = '../public';
 
 // Inspired by https://github.com/metonym/svelte-rollup-template/blob/master/rollup.config.js
-function hashStatic(htmlPath) {
+function hashStatic() {
 	return {
-	  name: "hash-static",
-	//   buildStart() {
-	// 	rimraf.sync(OUT_DIR);
-	//   },
-	  writeBundle() {
-		posthtml().use(
-		  // hashes `bundle.[custom-hash].css` and `bundle.[custom-hash].js`
-		  hash({ path: BUILD_DIR, pattern: new RegExp(/\[custom-hash\]/), }),
-		)
-		  .process(fs.readFileSync(htmlPath))
-		  .then((result) =>
-			fs.writeFileSync(htmlPath, result.html)
-		  );
-	  },
+		name: "hash-static",
+		//   buildStart() {
+		// 	rimraf.sync(OUT_DIR);
+		//   },
+		writeBundle() {
+			const hashHandler = posthtml().use(
+				// hashes `bundle.[custom-hash].css` and `bundle.[custom-hash].js`
+				hash({ 
+					path: BUILD_DIR, 
+					pattern: new RegExp(/\[custom-hash\]/), 
+					transformPath: (filepath) => filepath.replace('/public/', ""),
+				}),
+			)
+			hashHandler.process(fs.readFileSync(`${BUILD_DIR}/index.html`))
+				.then((result) =>
+					fs.writeFileSync(`${BUILD_DIR}/index.html`, result.html)
+				);
+			hashHandler.process(fs.readFileSync(`${BUILD_DIR}/modify_frontend/modify.html`))
+				.then((result) =>
+					fs.writeFileSync(`${BUILD_DIR}/modify_frontend/modify.html`, result.html)
+				);
+		},
 	};
-  }
+}
 
 export default {
 	input: [
@@ -46,7 +53,10 @@ export default {
 		entryFileNames: '[name]-[custom-hash].js',
 	},
 	plugins: [
-		copy({ targets: [{ src: "src/**/*.html", dest: BUILD_DIR }] }),
+		copy({ targets: [
+			{ src: "src/index.html", dest: BUILD_DIR },
+			{ src: "src/modify_frontend/*", dest: `${BUILD_DIR}/modify_frontend` }
+		] }),
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production
@@ -69,6 +79,7 @@ export default {
 		nodeResolve({
 			browser: true,
 			dedupe: ['svelte'],
+			preferBuiltins: false
 		}),
 		commonjs(),
 
@@ -85,7 +96,7 @@ export default {
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
 		production && terser(),
-		production && hashStatic(`${BUILD_DIR}/index.html`),
+		production && hashStatic(),
 	],
 	watch: {
 		clearScreen: false
