@@ -2,7 +2,7 @@
 // for the database API.
 // TODO: consider dividing this into multiple files.
 
-import turf from '@turf/turf';
+import {point, greatCircle, flip, getCoords, distance} from '@turf/turf';
 
 // == common functions ========
 
@@ -47,13 +47,13 @@ export function getCookieValue(name) {
 
 // 0 <= hue int < 360
 export function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus = false) {
-    let guessPoint = turf.point([guess.Location.Lng, guess.Location.Lat]);
-    let actualPoint = turf.point([actual.Location.Lng, actual.Location.Lat]);
+    let guessPoint = point([guess.Location.Lng, guess.Location.Lat]);
+    let actualPoint = point([actual.Location.Lng, actual.Location.Lat]);
 
-    let greatCircle = turf.greatCircle(guessPoint, actualPoint);
-    greatCircle = turf.flip(greatCircle);
+    let greatCircle = greatCircle(guessPoint, actualPoint);
+    greatCircle = flip(greatCircle);
 
-    let polyline = L.polyline(turf.getCoords(greatCircle), { color: '#007bff' }).addTo(map);
+    let polyline = L.polyline(getCoords(greatCircle), { color: '#007bff' }).addTo(map);
     L.marker([guess.Location.Lat, guess.Location.Lng], {
         title: nickname,
         icon: makeIcon(roundNum + 1, hue),
@@ -120,9 +120,9 @@ export function calcScoreDistance(guess, actual, graceDistance=0, area=earthArea
     if (Math.abs(guess.Location.Lat > 90)) {
         return 0
     }
-    let guessPoint = turf.point([guess.Location.Lng, guess.Location.Lat]);
-    let actualPoint =  turf.point([actual.Location.Lng, actual.Location.Lat]);
-    let distance = turf.distance(guessPoint, actualPoint, {units: "kilometers"}) * 1000.0;
+    let guessPoint = point([guess.Location.Lng, guess.Location.Lat]);
+    let actualPoint =  point([actual.Location.Lng, actual.Location.Lat]);
+    let distance = distance(guessPoint, actualPoint, {units: "kilometers"}) * 1000.0;
     if (distance < graceDistance) {
         return [maxScore, distance];
     }
@@ -188,7 +188,7 @@ export function orderRounds(arrWithRoundNums) {
 }
 
 // methods return promises
-class EarthwalkerAPI {
+export class EarthwalkerAPI {
     constructor(baseURL="") {
         this.configURL = baseURL + "/api/config";
         this.mapsURL = baseURL + "/api/maps";

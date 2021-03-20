@@ -4,7 +4,8 @@
 
 	import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 	import "../../node_modules/leaflet/dist/leaflet.css";
-	import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
+	import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores';
+	import { EarthwalkerAPI } from '../js/earthwalker';
 
 	import CreateMap from './CreateMap.svelte'
 	import CreateChallenge from './CreateChallenge.svelte'

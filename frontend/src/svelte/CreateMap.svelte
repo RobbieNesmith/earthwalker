@@ -2,7 +2,7 @@
     // TODO: svelteify this file
     import { onMount } from 'svelte';
     import Tags from 'svelte-tags-input';
-    import turf from '@turf/turf';
+    import { area, multiPolygon } from '@turf/turf';
     import { loc, ewapi, globalMap } from '../js/stores.js';
     import { loadGeoTIF, fetchPano, fetchPanos, getLocationPopulation, getRandomConstrainedLatLng, getRandomLngLat, resultPanoIsGood} from '../js/get_places';
     import {calcScoreDistance, calcTotalScore, distString, getChallengeID, getChallengeResultID, getCookieValue, getObject, getURLParam, orderRounds, postObject, showGuessOnMap, svgIcon} from '../js/earthwalker';
@@ -138,7 +138,7 @@
         }
 
         if (mapSettings.Polygon) {
-            mapSettings.Area = turf.area(mapSettings.Polygon);
+            mapSettings.Area = area(mapSettings.Polygon);
         } else {
             alert("No results found for the given location string(s)!");
         }
@@ -152,9 +152,9 @@
         for (let i = 0; i < data.length; i++) {
             let type = data[i].geojson.type.toLowerCase();
             if (type === "multipolygon") {
-                return turf.multiPolygon(data[i].geojson.coordinates);
+                return multiPolygon(data[i].geojson.coordinates);
             } else if (type === "polygon") {
-                return turf.multiPolygon([data[i].geojson.coordinates]);
+                return multiPolygon([data[i].geojson.coordinates]);
             }
         }
         console.log("No matching polygon!");

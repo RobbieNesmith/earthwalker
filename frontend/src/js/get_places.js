@@ -14,7 +14,7 @@
 //       cookies storing the ChallengeID and ChallengeResultID, then redirect
 //       to /play.
 
-import turf from '@turf/turf';
+import { point, booleanPointInPolygon, bbox } from '@turf/turf';
 import GeoTIFF from 'geotiff';
 
 // search radius in meters - using 500 (formerly 50,000) causes more NO_RESULTS
@@ -120,8 +120,8 @@ export function resultPanoIsGood(result, settings) {
         return false;
     }
 
-    let locationTurfPoint = turf.point([result.location.latLng.lng(), result.location.latLng.lat()]);
-    if (settings.Polygon != null && !turf.booleanPointInPolygon(locationTurfPoint, settings.Polygon)) {
+    let locationTurfPoint = point([result.location.latLng.lng(), result.location.latLng.lat()]);
+    if (settings.Polygon != null && !booleanPointInPolygon(locationTurfPoint, settings.Polygon)) {
         return false;
     }
 
@@ -141,14 +141,14 @@ export async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, ma
         getRandomLngLatInBounds = getRandomLngLat;
         pointInPolygon = (_) => true;
     } else {
-        let bounds = turf.bbox(polygon);
+        let bounds = bbox(polygon);
         getRandomLngLatInBounds = function() {
             let randomLng = (Math.random() * (bounds[2] - bounds[0]) + bounds[0]);
             let randomLat = (Math.random() * (bounds[3] - bounds[1]) + bounds[1]);
             return [randomLng, randomLat];
         }
         pointInPolygon = function(lnglat) {
-            return turf.booleanPointInPolygon(turf.point(lnglat), polygon);
+            return booleanPointInPolygon(point(lnglat), polygon);
         }
     }
 

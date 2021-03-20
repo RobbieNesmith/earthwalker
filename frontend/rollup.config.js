@@ -8,6 +8,7 @@ import fs from "fs";
 import posthtml from "posthtml";
 import { hash } from "posthtml-hash";
 import copy from "rollup-plugin-copy";
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 
 const production = !process.env.ROLLUP_WATCH;
@@ -67,23 +68,10 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		nodeResolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
 		}),
-
 		commonjs(),
-		// html({ 
-		// 	input: ['src/index.html', 
-		// 	'src/modify_frontend/modify.html'],
-		// 	flattenOutput: false,
-		// 	// transformAsset: ()
-		// 	// files: ['src/index.html', 'modify_frontend/modify.html'],
-		// 	//  flatten: false, rootDir: '../public' 
-		// }),
-		// svelteStaticHtml({
-		// 	component: 'src/svelte/App.svelte',
-		// 	output: `${BUILD_DIR}/index.html`,
-		// 	template: 'src/index.html'
-		// }),
+
 
 
 		// In dev mode, call `npm run start` once

@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { EarthwalkerAPI } from './earthwalker';
 
 function createLoc() {
     const {subscribe, set, update} = writable("");
