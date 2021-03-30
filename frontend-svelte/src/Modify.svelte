@@ -175,7 +175,7 @@
         setTimeout(function() {
             leafletMap.invalidateSize();
             if (oldMarker) {
-                leafletMap.setView([oldMarker.lat, oldMarker.lng], 1);
+                leafletMap.setView(oldMarker.mapCenter, oldMarker.mapZoom);
             } else if ($globalMap.Polygon) {
                 leafletMap.fitBounds(map_poly.getBounds());
             } else {
@@ -403,6 +403,8 @@
                                 "lng": marker.getLatLng().lng,
                                 "roundNumber": $globalResult.Guesses.length,
                                 "gameID": $globalResult.ChallengeResultID,
+                                "mapCenter": leafletMap.getCenter(),
+                                "mapZoom": leafletMap.getZoom(),
                             }));
                         }
                         // https://www.phpied.com/files/location-location/location-location.html
