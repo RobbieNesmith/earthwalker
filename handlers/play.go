@@ -19,6 +19,7 @@ const resultCookiePrefix = "earthwalker_lastResult_"
 type Play struct {
 	ChallengeStore       domain.ChallengeStore
 	ChallengeResultStore domain.ChallengeResultStore
+	Config               domain.Config
 }
 
 func (handler Play) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +67,7 @@ func (handler Play) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println(challenge.Places[len(result.Guesses)].Location)
 	// TODO: FIXME: this fails catastrophically if the player has already
 	//              completed the challenge and tries to navigate back to /play
-	ServeLocation(challenge.Places[len(result.Guesses)].Location, w, r)
+	handler.ServeLocation(challenge.Places[len(result.Guesses)].Location, w, r)
 }
 
 func getChallengeID(r *http.Request) (string, error) {
@@ -91,7 +92,7 @@ func getResultID(r *http.Request, challengeID string) (string, error) {
 	return resultCookie.Value, nil
 }
 
-func modifyMainPage(target string, w http.ResponseWriter, r *http.Request) {
+func (handler Play) modifyMainPage(target string, w http.ResponseWriter, r *http.Request) {
 	res, err := http.Get(target)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusForbidden)
@@ -105,8 +106,7 @@ func modifyMainPage(target string, w http.ResponseWriter, r *http.Request) {
 	}
 	bodyAsString := string(body)
 
-	// TODO: FIXME: use config static path
-	insertBody, err := ioutil.ReadFile("public/modify_frontend/modify.html")
+	insertBody, err := ioutil.ReadFile(handler.Config.StaticPath + "/public/modify_frontend/modify.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,9 +179,9 @@ func buildURL(location domain.Coords) string {
 }
 
 // ServeLocation serves a specific location to the user.
-func ServeLocation(l domain.Coords, w http.ResponseWriter, r *http.Request) {
+func (handler Play) ServeLocation(l domain.Coords, w http.ResponseWriter, r *http.Request) {
 	mapsURL := buildURL(l)
-	modifyMainPage(mapsURL, w, r)
+	handler.modifyMainPage(mapsURL, w, r)
 }
 
 // ServeGoogle is a proxy to google

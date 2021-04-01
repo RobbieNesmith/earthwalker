@@ -41,17 +41,17 @@ function getCookieValue(name) {
     return null;
 }
 
-function showChallengeLinkPrompt(challengeID) {
-    let link = window.location.origin + "/play?id=" + challengeID;
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", link);
-}
-
-
 // == Leaflet Map ========
 
 // 0 <= hue int < 360
-function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus=false) {
-    let polyline = L.polyline([[guess.Location.Lat, guess.Location.Lng], [actual.Location.Lat, actual.Location.Lng]], {color: '#007bff'}).addTo(map);
+function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus = false) {
+    let guessPoint = turf.point([guess.Location.Lng, guess.Location.Lat]);
+    let actualPoint = turf.point([actual.Location.Lng, actual.Location.Lat]);
+
+    let greatCircle = turf.greatCircle(guessPoint, actualPoint);
+    greatCircle = turf.flip(greatCircle);
+
+    let polyline = L.polyline(turf.getCoords(greatCircle), { color: '#007bff' }).addTo(map);
     L.marker([guess.Location.Lat, guess.Location.Lng], {
         title: nickname,
         icon: makeIcon(roundNum + 1, hue),

@@ -31,6 +31,13 @@ Install [Docker](https://www.docker.com/) and run this command:
 
 That's it. The website should be hosted at `localhost:8080`. The port can be remapped via docker.
 
+#### Hosting on Archlinux using the AUR package
+[Download, build and install](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_and_upgrading_packages) the [earthwalker-git](https://aur.archlinux.org/packages/earthwalker-git/) package. Then start it via:
+
+    $ sudo systemctl start earthwalker.service
+
+You can then access the website at `http://localhost:8080`. You can configure earthwalker (e.g. the port) by editing `/etc/earthwalker/config.toml`. Check out [Using systemctl](https://wiki.archlinux.org/index.php/Systemd#Basic_systemctl_usage) for more information on how to manage the server.
+
 #### Hosting on Linux or the Windows Subsystem for Linux (WSL) manually (without Docker)
 
 Start by installing [Git](https://git-scm.com/), [Go](https://golang.org/) and [node](https://nodejs.org/en/download/).
@@ -113,7 +120,7 @@ You can rename or copy the provided sample configuration file, `config.toml.samp
 |                   | EARTHWALKER_CONFIG_PATH                           |                      | ./config.toml                                            | Location of the `.toml` configuration file |
 | port              | EARTHWALKER_PORT                                  | Port                 | 8080                                                     |          |
 |                   | EARTHWALKER_DB_PATH                               | DBPath               | ./badger                                                 | Location of the database directory |
-|                   | EARTHWALKER_STATIC_PATH                           | StaticPath           | location of executable (usually `earthwalker`)           | Absolute path to the directory containing `static` and `templates` |
+|                   | EARTHWALKER_STATIC_PATH                           | StaticPath           | location of executable (usually `earthwalker`)           | Absolute path to the directory containing `public` |
 |                   |                                                   | TileServerURL        | https://tiles.wmflabs.org/osm/{z}/{x}/{y}.png            | URL of a raster tile server.  This determines what you see on the map. |
 |                   |                                                   | NoLabelTileServerURL | https://tiles.wmflabs.org/osm-no-labels/{z}/{x}/{y}.png  | As above, but this value is used when a map creator has turned labels off. |
 
