@@ -15,7 +15,7 @@ func TestGetTileServer(t *testing.T) {
 		t.Fatal(err)
 	}
 	recorder := httptest.NewRecorder()
-	conf := domain.Config{TileServerURL: "https://tiles.wmflabs.org/osm/{z}/{x}/{y}.png"}
+	conf := domain.Config{TileServerURL: "https://mt.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}"}
 	handler := Root{ConfigHandler: Config{Config: conf}}
 
 	handler.ServeHTTP(recorder, req)
@@ -34,7 +34,7 @@ func TestGetNoLabelTileServer(t *testing.T) {
 		t.Fatal(err)
 	}
 	recorder := httptest.NewRecorder()
-	conf := domain.Config{NoLabelTileServerURL: "https://tiles.wmflabs.org/osm-no-labels/{z}/{x}/{y}.png"}
+	conf := domain.Config{NoLabelTileServerURL: "https://mt.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}"}
 	handler := Root{ConfigHandler: Config{Config: conf}}
 
 	handler.ServeHTTP(recorder, req)
