@@ -9,6 +9,7 @@ If you don't use docker, run
     git pull origin master
 
 and try again! :)
+If it still doesn't work, feel free to open an issue!
 
 # Earthwalker
 
