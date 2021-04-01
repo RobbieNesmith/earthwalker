@@ -13,3 +13,4 @@ start.sh
 config.toml
 
 public/build/*
+**/package-lock.json
