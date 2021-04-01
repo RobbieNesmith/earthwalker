@@ -1,3 +1,15 @@
+## Hi, are you here because your earthwalker doesn't work anymore?
+
+I think we fixed it. Just update your earthwalker instance! If you use docker:
+
+    docker pull registry.gitlab.com/glatteis/earthwalker
+
+If you don't use docker, run 
+
+    git pull origin master
+
+and try again! :)
+
 # Earthwalker
 
 Earthwalker is a game of a similar concept to [GeoGuessr](https://geoguessr.com).
@@ -30,6 +42,9 @@ Install [Docker](https://www.docker.com/) and run this command:
     docker run -p 8080:8080 registry.gitlab.com/glatteis/earthwalker
 
 That's it. The website should be hosted at `localhost:8080`. The port can be remapped via docker.
+Update earthwalker using the command
+
+    docker pull registry.gitlab.com/glatteis/earthwalker
 
 #### Hosting on Archlinux using the AUR package
 [Download, build and install](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_and_upgrading_packages) the [earthwalker-git](https://aur.archlinux.org/packages/earthwalker-git/) package. Then start it via:
