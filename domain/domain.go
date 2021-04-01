@@ -144,8 +144,9 @@ type Guess struct {
 	Location          Coords
 }
 
-// Coords in degrees
+// Coords in degrees plus PanoID
 type Coords struct {
-	Lat float64
-	Lng float64
+	Lat    float64
+	Lng    float64
+	PanoID string
 }
