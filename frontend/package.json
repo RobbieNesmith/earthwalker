@@ -27,6 +27,7 @@
     "events": "^3.3.0",
     "geotiff": "^1.0.0-beta.16",
     "leaflet": "^1.7.1",
+    "leaflet-lasso": "^2.2.4",
     "sirv-cli": "^1.0.10",
     "svelte-tags-input": "^2.6.5"
   }

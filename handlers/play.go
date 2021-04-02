@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -113,7 +112,7 @@ func (handler Play) modifyMainPage(target string, w http.ResponseWriter, r *http
 	}
 
 	replacedBody := strings.Replace(bodyAsString, "<head>", "<head> "+string(insertBody), 1)
-	w.Write([]byte(replacedBody))
+	w.Write(filterUrls([]byte(replacedBody)))
 }
 
 func modifyInformation(target string, w http.ResponseWriter, r *http.Request) {
@@ -127,8 +126,8 @@ func modifyInformation(target string, w http.ResponseWriter, r *http.Request) {
 	}
 
 	res, err := http.DefaultClient.Do(req)
-	// res, err := http.Get(target)
 	if err != nil {
+		fmt.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusForbidden)
 		return
 	}
@@ -139,8 +138,15 @@ func modifyInformation(target string, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body = filterStrings(body)
+	if strings.Contains(target, "photometa") {
+		body = filterPhotometa(body)
+	} else {
+		body = filterUrls(body)
+	}
 
+	for header := range res.Header {
+		w.Header().Add(header, res.Header.Get(header))
+	}
 	w.Write(body)
 }
 
@@ -150,22 +156,26 @@ func floatToString(number float64) string {
 
 // buildURL builds google street view urls from coordinates
 func buildURL(location domain.Coords) string {
-	baseURL, err := url.Parse("https://www.google.com/maps")
-	if err != nil {
-		log.Fatal("Failed while parsing static gmaps url", err)
-	}
-	query := baseURL.Query()
-	// see https://stackoverflow.com/questions/387942/google-street-view-url
-	// for a reverse-engineering of the parameters
 
-	// the layer must be set to c (the street view layer)
-	query.Set("layer", "c")
-	// latitude and longitude go into parameter cbll
-	query.Set("cbll", floatToString(location.Lat)+","+floatToString(location.Lng))
+	template := "https://www.google.com/maps/@%f,%f,3a,90y,0h,90t/data=!3m7!1e1!3m5!1s%s!2e0!3e11!7i3512!8i894"
+	return fmt.Sprintf(template, location.Lat, location.Lng, location.PanoID)
 
-	baseURL.RawQuery = query.Encode()
+	// 	baseURL, err := url.Parse("https://www.google.com/maps")
+	// 	if err != nil {
+	// 		log.Fatal("Failed while parsing static gmaps url", err)
+	// 	}
+	// 	query := baseURL.Query()
+	// 	// see https://stackoverflow.com/questions/387942/google-street-view-url
+	// 	// for a reverse-engineering of the parameters
 
-	return baseURL.String()
+	// 	// the layer must be set to c (the street view layer)
+	// 	query.Set("layer", "c")
+	// 	// latitude and longitude go into parameter cbll
+	// 	query.Set("cbll", floatToString(location.Lat)+","+floatToString(location.Lng))
+
+	// 	baseURL.RawQuery = query.Encode()
+	// 	fmt.Println(baseURL.String())
+	// 	return baseURL.String()
 }
 
 // ServeLocation serves a specific location to the user.
@@ -174,15 +184,11 @@ func (handler Play) ServeLocation(l domain.Coords, w http.ResponseWriter, r *htt
 	handler.modifyMainPage(mapsURL, w, r)
 }
 
-// ServeMaps is a proxy to google maps
-func ServeMaps(w http.ResponseWriter, r *http.Request) {
+// ServeGoogle is a proxy to google
+func ServeGoogle(w http.ResponseWriter, r *http.Request) {
 	fullURL := r.URL
 	fullURL.Host = "www.google.com"
 	fullURL.Scheme = "https"
 
-	if strings.Contains(fullURL.String(), "photometa") {
-		modifyInformation(fullURL.String(), w, r)
-	} else {
-		http.Redirect(w, r, fullURL.String(), http.StatusFound)
-	}
+	modifyInformation(fullURL.String(), w, r)
 }

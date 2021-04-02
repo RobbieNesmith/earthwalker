@@ -106,7 +106,7 @@ func main() {
 		ChallengeResultStore: challengeResultStore,
 		Config:               conf,
 	})
-	http.HandleFunc("/maps/", handlers.ServeMaps)
+	http.HandleFunc("/maps/", handlers.ServeGoogle)
 	// Otherwise, just serve index.html and let the frontend deal with the consequences
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, conf.StaticPath+"/public/index.html") })
 

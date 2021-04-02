@@ -93,9 +93,12 @@ export async function fetchPano(svService, settings, popTIF, incrNumReqsCallback
         }
     }
     
-    function handlePanoResponse(result, status, foundLatLng) {
+    function handlePanoResponse(result, status) {
         if (status == google.maps.StreetViewStatus.OK && resultPanoIsGood(result, settings)) {
-            return result.location.latLng;
+            return {
+                "latLng": result.location.latLng,
+                "panoID": result.location.pano
+            };
         }
     }
     console.log("Maximum number of StreetView API requests exceeded.");

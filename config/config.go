@@ -21,8 +21,8 @@ func Read() (domain.Config, error) {
 		StaticPath:           appPath,
 		DBPath:               appPath + "/badger",
 		Port:                 "8080",
-		TileServerURL:        "https://tiles.wmflabs.org/osm/{z}/{x}/{y}.png",
-		NoLabelTileServerURL: "https://tiles.wmflabs.org/osm-no-labels/{z}/{x}/{y}.png",
+		TileServerURL:        "https://mt.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}",
+		NoLabelTileServerURL: "https://mt.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}",
 	}
 
 	// TOML

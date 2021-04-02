@@ -63,6 +63,8 @@
             statusText = "We're having a hard time finding good StreetView locations.<br/>Refresh the page to try again, or create a map with fewer restrictions.";
             return;
         }
+        
+        console.log(foundCoords);
 
         statusText = "Sending Challenge to server..."
         challengeID = await submitNewChallenge();
@@ -73,7 +75,7 @@
     });
 
     async function submitNewChallenge() {
-        let convertedCoords = foundCoords.map((coord, i) => ({RoundNum: i, Location: {Lat: coord.lat(), Lng: coord.lng()}}));
+        let convertedCoords = foundCoords.map((coord, i) => ({RoundNum: i, Location: {Lat: coord.latLng.lat(), Lng: coord.latLng.lng(), PanoID: coord.panoID}}));
         let challenge = {
             MapID: $globalMap.MapID,
             Places: convertedCoords

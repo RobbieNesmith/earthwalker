@@ -1,3 +1,17 @@
+## Hi, are you here because your earthwalker doesn't work anymore?
+
+I think we fixed it. Just update your earthwalker instance! If you use docker:
+
+    docker pull registry.gitlab.com/glatteis/earthwalker
+
+If you don't use docker, run 
+
+    git pull origin master
+    make
+
+and try again! :)
+If it still doesn't work, feel free to open an issue!
+
 # Earthwalker
 
 Earthwalker is a game of a similar concept to [GeoGuessr](https://geoguessr.com).
@@ -30,6 +44,9 @@ Install [Docker](https://www.docker.com/) and run this command:
     docker run -p 8080:8080 registry.gitlab.com/glatteis/earthwalker
 
 That's it. The website should be hosted at `localhost:8080`. The port can be remapped via docker.
+Update earthwalker using the command
+
+    docker pull registry.gitlab.com/glatteis/earthwalker
 
 #### Hosting on Archlinux using the AUR package
 [Download, build and install](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_and_upgrading_packages) the [earthwalker-git](https://aur.archlinux.org/packages/earthwalker-git/) package. Then start it via:
@@ -121,8 +138,8 @@ You can rename or copy the provided sample configuration file, `config.toml.samp
 | port              | EARTHWALKER_PORT                                  | Port                 | 8080                                                     |          |
 |                   | EARTHWALKER_DB_PATH                               | DBPath               | ./badger                                                 | Location of the database directory |
 |                   | EARTHWALKER_STATIC_PATH                           | StaticPath           | location of executable (usually `earthwalker`)           | Absolute path to the directory containing `public` |
-|                   |                                                   | TileServerURL        | https://tiles.wmflabs.org/osm/{z}/{x}/{y}.png            | URL of a raster tile server.  This determines what you see on the map. |
-|                   |                                                   | NoLabelTileServerURL | https://tiles.wmflabs.org/osm-no-labels/{z}/{x}/{y}.png  | As above, but this value is used when a map creator has turned labels off. |
+|                   |                                                   | TileServerURL        |  https://mt.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}        | URL of a raster tile server.  This determines what you see on the map. |
+|                   |                                                   | NoLabelTileServerURL | https://mt.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z} | As above, but this value is used when a map creator has turned labels off. |
 
 </details>
 
