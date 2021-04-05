@@ -57,6 +57,11 @@
                 </div>
             </div>
 
+            <div id="leaderboard" style="margin-top: 2em; text-align: center;">
+                <h3>Challenge Leaderboard</h3>
+                <Leaderboard bind:displayedResults={displayedResults} {allResults} curRound={$globalMap.NumRounds - 1}/>
+            </div>
+
             <div style="margin-top: 2em; text-align: center;">
                 {#each displayedResults as displayedResult, j}
                 <h3>{displayedResult && displayedResult.Nickname ? displayedResult.Nickname + "\'s" : "Your"} scores:</h3>
@@ -79,11 +84,6 @@
                     </tbody>
                 </table>
                 {/each}
-            </div>
-
-            <div id="leaderboard" style="margin-top: 2em; text-align: center;">
-                <h3>Challenge Leaderboard</h3>
-                <Leaderboard bind:displayedResults={displayedResults} {allResults} curRound={$globalMap.NumRounds - 1}/>
             </div>
         </div>
     {/await}
