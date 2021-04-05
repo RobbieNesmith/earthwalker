@@ -8,7 +8,7 @@
     import Leaderboard from './components/Leaderboard.svelte';
     import utils from './utils';
 
-    let displayedResult;
+    let displayedResults;
     let allResults = [];
 
     let guessLocs;
@@ -30,9 +30,9 @@
             r.totalScore = r.scoreDists.reduce((acc, val) => acc + val[0], 0);
             r.totalDist = r.scoreDists.reduce((acc, val) => acc + val[1], 0)
         });
-        displayedResult = allResults.find(r => r.ChallengeResultID === $globalResult.ChallengeResultID);
         allResults.sort((a, b) => b.totalScore - a.totalScore);
         allResults = allResults;
+        displayedResults = allResults;
     }
 </script>
 
@@ -42,7 +42,7 @@
     {#await fetchData()}
         <h2>Loading...</h2>
     {:then}
-        <LeafletGuessesMap {displayedResult} showAll={true}/>
+        <LeafletGuessesMap {displayedResults} showAll={true}/>
 
         <div class="container">
             <br>
@@ -58,6 +58,7 @@
             </div>
 
             <div style="margin-top: 2em; text-align: center;">
+                {#each displayedResults as displayedResult, j}
                 <h3>{displayedResult && displayedResult.Nickname ? displayedResult.Nickname + "\'s" : "Your"} scores:</h3>
                 <table class="table table-striped">
                     <thead>
@@ -77,11 +78,12 @@
                     {/if}
                     </tbody>
                 </table>
+                {/each}
             </div>
 
             <div id="leaderboard" style="margin-top: 2em; text-align: center;">
                 <h3>Challenge Leaderboard</h3>
-                <Leaderboard bind:displayedResult={displayedResult} {allResults} curRound={$globalMap.NumRounds - 1}/>
+                <Leaderboard bind:displayedResults={displayedResults} {allResults} curRound={$globalMap.NumRounds - 1}/>
             </div>
         </div>
     {/await}

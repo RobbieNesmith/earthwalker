@@ -7,7 +7,7 @@
     // data
     let allResults = [];
     let result;
-    let displayedResult;
+    let displayedResults = [];
 
     // reactive
     let curRound = 0;
@@ -23,7 +23,7 @@
         curRound = result.Guesses.length - 1;
         allResults.sort((a, b) => b.scoreDists[curRound][0] - a.scoreDists[curRound][0]);
         allResults = allResults;
-        displayedResult = result;
+        displayedResults = allResults;
     }
 
 </script>
@@ -40,7 +40,7 @@
     {#await fetchData()}
         <h2>Loading...</h2>
     {:then}
-        <LeafletGuessesMap displayedResult={displayedResult} showAll={false} {curRound}/>
+        <LeafletGuessesMap displayedResults={displayedResults} showAll={false} {curRound}/>
         <div class="container">
             <div style="margin-top: 2em; text-align: center;">
                 <p class="text-center">
@@ -68,7 +68,7 @@
                 </div>
                 <div id="leaderboard" style="margin-top: 2em; text-align: center;">
                     <h3>Leaderboard</h3>
-                    <Leaderboard bind:displayedResult={displayedResult} {allResults} {curRound}/>
+                    <Leaderboard bind:displayedResults={displayedResults} {allResults} {curRound}/>
                 </div>
                 <p class="text-muted">Reload the page to see other player's scores once they finish this round.</p>
                 {#if $globalMap.NumRounds && result && result.Guesses && result.Guesses.length == $globalMap.NumRounds}

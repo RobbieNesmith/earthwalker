@@ -2,7 +2,7 @@
     import {onMount} from 'svelte';
     import { loc, ewapi, globalMap, globalChallenge } from '../stores.js';
 
-    export let displayedResult, showAll, curRound;
+    export let displayedResults, showAll, curRound;
 
     let tileServer;
 
@@ -12,11 +12,16 @@
     let polyGroup;
     let guessGroup;
 
-    $: if (guessGroup && displayedResult) {
+    $: if (guessGroup && displayedResults) {
+        guessGroup.clearLayers();
         if (showAll) {
-            showGuesses(guessGroup, displayedResult.Guesses);
+            for (let displayedResult of displayedResults) {
+                showGuesses(guessGroup, displayedResult.Guesses, displayedResult.Nickname, displayedResult.Icon);
+            }
         } else {
-            showGuesses(guessGroup, [displayedResult.Guesses[curRound]]);
+            for (let displayedResult of displayedResults) {
+                showGuesses(guessGroup, [displayedResult.Guesses[curRound]], displayedResult.Nickname, displayedResult.Icon);
+            }
         }
         lMap.fitBounds(guessGroup.getBounds());
     };
@@ -38,10 +43,9 @@
         guessGroup = L.featureGroup().addTo(lMap);
     });
 
-    function showGuesses(layer, guesses) {
-        layer.clearLayers();
+    function showGuesses(layer, guesses, nickname, icon) {
         guesses.forEach(guess => {
-            showGuessOnMap(layer, guess, $globalChallenge.Places[guess.RoundNum], guess.RoundNum, displayedResult.Nickname, displayedResult.Icon);
+            showGuessOnMap(layer, guess, $globalChallenge.Places[guess.RoundNum], guess.RoundNum, nickname, icon);
         });
     }
 </script>

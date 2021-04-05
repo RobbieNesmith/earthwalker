@@ -58,7 +58,7 @@ function showGuessOnMap(map, guess, actual, roundNum, nickname, hue, focus = fal
     }).addTo(map).openPopup();
     L.marker([actual.Location.Lat, actual.Location.Lng], {
         title: "Actual Position",
-        icon: makeIcon("!", hue),
+        icon: makeIcon("!", 1),
     }).addTo(map).openPopup();
     if (focus) {
         map.fitBounds(polyline.getBounds(), {padding: [20, 20]});
