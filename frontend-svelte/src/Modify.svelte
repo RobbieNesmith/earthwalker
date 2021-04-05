@@ -397,7 +397,7 @@
                     on:click={() => {
                         if (marker != null) {
                             // Put marker into session storage
-                            console.log(marker.getLatLng());
+                            /* console.log(marker.getLatLng()); */
                             sessionStorage.setItem("lastMarker", JSON.stringify({
                                 "lat": marker.getLatLng().lat,
                                 "lng": marker.getLatLng().lng,

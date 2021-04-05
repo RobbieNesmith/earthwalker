@@ -62,7 +62,7 @@
             return;
         }
         
-        console.log(foundCoords);
+        /* console.log(foundCoords); */
 
         statusText = "Sending Challenge to server..."
         challengeID = await submitNewChallenge();

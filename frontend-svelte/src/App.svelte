@@ -42,10 +42,10 @@
 	}
 
 	// TODO: remove debug
-	$: console.log($loc);
-	$: console.log($globalMap);
-	$: console.log($globalChallenge);
-	$: console.log($globalResult);
+	/* $: console.log($loc); */
+	/* $: console.log($globalMap); */
+	/* $: console.log($globalChallenge); */
+	/* $: console.log($globalResult); */
 
 	// write sets loc without side effects (unlike set/assignment)
 	loc.write(window.location.pathname);
