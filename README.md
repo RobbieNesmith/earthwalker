@@ -7,6 +7,7 @@ I think we fixed it. Just update your earthwalker instance! If you use docker:
 If you don't use docker, run 
 
     git pull origin master
+    make
 
 and try again! :)
 If it still doesn't work, feel free to open an issue!
