@@ -112,7 +112,7 @@ func (handler Play) modifyMainPage(target string, w http.ResponseWriter, r *http
 	}
 
 	replacedBody := strings.Replace(bodyAsString, "<head>", "<head> "+string(insertBody), 1)
-	w.Write(filterUrls([]byte(replacedBody)))
+	w.Write([]byte(filterUrls(replacedBody)))
 }
 
 func modifyInformation(target string, w http.ResponseWriter, r *http.Request) {
@@ -139,9 +139,9 @@ func modifyInformation(target string, w http.ResponseWriter, r *http.Request) {
 	}
 
 	if strings.Contains(target, "photometa") {
-		body = filterPhotometa(body)
+		body = []byte(filterPhotometa(string(body)))
 	} else {
-		body = filterUrls(body)
+		body = []byte(filterUrls(string(body)))
 	}
 
 	for header := range res.Header {

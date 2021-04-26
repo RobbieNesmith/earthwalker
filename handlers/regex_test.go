@@ -8,14 +8,18 @@ func TestFilterStringsPhotometa(t *testing.T) {
 	inputs := []string{
 		"This is a test, and replaced should be this: [[\"Jl. SMA Aek Kota Batu\",\"id\"],[\"Sumatera Utara\",\"de\"]], yes that is what should be replaced.",
 		"[[\"а/д Вятка\",\"ru\"]]",
+		"[[null,[\"5169892334252101127\",\"2545753247963106749\"],null,\"2545753247963106749\"],null,[\"The Body Shop\",\"de\"],[\"Cosmetics store\",\"en\"],\"https://maps.gstatic.com/mapfiles/annotations/icons/shopping_closed_2x.5.png\",null,null,4]",
+		"\"https://maps.gstatic.com/mapfiles/annotations/icons/medical_2x.5.png\"",
 	}
 	outputs := []string{
 		"This is a test, and replaced should be this: [[\"\",\"\"],[\"\",\"\"]], yes that is what should be replaced.",
 		"[[\"\",\"\"]]",
+		"[[null,[\"5169892334252101127\",\"2545753247963106749\"],null,\"2545753247963106749\"],null,[\"\",\"\"],[\"\",\"\"],\"\",null,null,4]",
+		"\"\"",
 	}
 
 	for i := range inputs {
-		out := string(filterPhotometa([]byte(inputs[i])))
+		out := filterPhotometa(inputs[i])
 		if out != outputs[i] {
 			t.Fatal("Expected\n", outputs[i], "\nbut got\n", out)
 		}
@@ -31,7 +35,7 @@ func TestFilterStringsGoogle(t *testing.T) {
 	}
 
 	for i := range inputs {
-		out := string(filterUrls([]byte(inputs[i])))
+		out := filterUrls(inputs[i])
 		if out != outputs[i] {
 			t.Fatal("Expected\n", outputs[i], "\nbut got\n", out)
 		}

@@ -108,7 +108,9 @@ func main() {
 	})
 	http.HandleFunc("/maps/", handlers.ServeGoogle)
 	// Otherwise, just serve index.html and let the frontend deal with the consequences
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, conf.StaticPath+"/public/index.html") })
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, conf.StaticPath+"/public/index.html")
+	})
 
 	// == ENGAGE ========
 	log.Println("earthwalker is running on ", port)

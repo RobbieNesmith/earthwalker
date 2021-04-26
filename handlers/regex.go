@@ -4,11 +4,16 @@ import (
 	"regexp"
 )
 
-// GOAL : MATCH [["Jl. SMA Aek Kota Batu","id"],["Sumatera Utara","de"]]
 var stringRegex = "(\\p{L}| |\\d|\\_|\\-|\\,|\\.|/)"
-var languageRegex = "\\[\"" + stringRegex + "+\"+,\"" + stringRegex + "{1,10}\"\\]"
 
-var compiledRegexp *regexp.Regexp = regexp.MustCompile(languageRegex)
+// GOAL : MATCH [["Jl. SMA Aek Kota Batu","id"],["Sumatera Utara","de"]]
+var listOfStringsRegex = "\\[\"" + stringRegex + "+\"+,\"" + stringRegex + "{1,10}\"\\]"
+var replaceListOfStringsWith = "[\"\",\"\"]"
+var compiledListOfStringsRegex *regexp.Regexp = regexp.MustCompile(listOfStringsRegex)
+
+var iconRegex = "\"https://maps.gstatic.com/mapfiles/annotations/icons/" + stringRegex + "+\""
+var replaceIconWith = "\"\""
+var compiledIconRegex *regexp.Regexp = regexp.MustCompile(iconRegex)
 
 var googleMapsRegex = "https:\\/\\/(www\\.|maps\\.)?google\\.com/"
 var compiledGoogleMapsRegex *regexp.Regexp = regexp.MustCompile(googleMapsRegex)
@@ -18,13 +23,14 @@ var compiledGoogleConsentRegex *regexp.Regexp = regexp.MustCompile(googleConsent
 
 // filterStrings filters all string contents from a given string (as byte array),
 // used to strip all localization information from a specific street view packet
-func filterPhotometa(body []byte) []byte {
-	result := compiledRegexp.ReplaceAllString(string(body), "[\"\",\"\"]")
-	return []byte(result)
+func filterPhotometa(body string) string {
+	result := compiledListOfStringsRegex.ReplaceAllString(body, replaceListOfStringsWith)
+	result = compiledIconRegex.ReplaceAllString(result, replaceIconWith)
+	return result
 }
 
-func filterUrls(body []byte) []byte {
-	result := compiledGoogleMapsRegex.ReplaceAllString(string(body), "/")
+func filterUrls(body string) string {
+	result := compiledGoogleMapsRegex.ReplaceAllString(body, "/")
 	result = compiledGoogleConsentRegex.ReplaceAllString(result, "/")
-	return []byte(result)
+	return result
 }
