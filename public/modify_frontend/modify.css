@@ -34,6 +34,10 @@
 	display: none;
 }
 
+.image-header {
+	display: none;
+}
+
 #titlecard {
 	display: none;
 }
