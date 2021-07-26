@@ -1,6 +1,6 @@
 build:
 	go build
-	cd frontend-svelte; npm install; npm run build
+	cd frontend; npm install; npm run build
 
 test:
 	go fmt $(go list ./...)
