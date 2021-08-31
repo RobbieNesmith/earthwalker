@@ -94,7 +94,7 @@ Compile the server:
 
 And compile the front end:  
 
-    cd frontend-svelte
+    cd frontend
     npm install
     npm run build
 
