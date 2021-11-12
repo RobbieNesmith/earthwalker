@@ -235,6 +235,13 @@
             }
         }
     }
+
+    // Prevent the escape key from being used to exit street view to a map
+    window.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") {
+            e.stopImmediatePropagation();
+        }
+    }, { capture: true });
 </script>
 
 <svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight}/>
