@@ -2,7 +2,7 @@
   "name": "svelte-app",
   "version": "1.0.0",
   "scripts": {
-    "build": "rm -rf ../public && rollup -c",
+    "build": "rimraf ../public && rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv ../public"
   },
@@ -11,6 +11,7 @@
     "@rollup/plugin-node-resolve": "^11.2.0",
     "posthtml": "^0.15.1",
     "posthtml-hash": "^1.2.2",
+    "rimraf": "^3.0.2",
     "rollup": "^2.41.4",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-css-only": "^3.1.0",
