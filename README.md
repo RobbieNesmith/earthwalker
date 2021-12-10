@@ -1,17 +1,3 @@
-## Hi, are you here because your earthwalker doesn't work anymore?
-
-I think we fixed it. Just update your earthwalker instance! If you use docker:
-
-    docker pull registry.gitlab.com/glatteis/earthwalker
-
-If you don't use docker, run 
-
-    git pull origin master
-    make
-
-and try again! :)
-If it still doesn't work, feel free to open an issue!
-
 # Earthwalker
 
 Earthwalker is a game of a similar concept to [GeoGuessr](https://geoguessr.com).
