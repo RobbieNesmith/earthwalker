@@ -13,12 +13,30 @@
     let totalScore = 0;
     // map sizing
     const mapSizes = [
-        [180, 135],
-        [300, 225],
-        [500, 375],
-        [800, 600],
-        [1200, 900],
-        [1600, 1200],
+        {
+            dimensions: [180, 135],  // 1x (can't be used)
+            zoom: 0, // Zoom can only be set to integers without using fractional zoom: https://leafletjs.com/examples/zoom-levels/
+        },
+        {
+            dimensions: [300, 225], // 1.666x
+            zoom: 0,
+        },
+        {
+            dimensions: [500, 375], // 2.777x
+            zoom: 1,
+        },
+        {
+            dimensions: [800, 600], // 4.444x
+            zoom: 1,
+        },
+        {
+            dimensions: [1200, 900], // 6.666x
+            zoom: 2,
+        },
+        {
+            dimensions: [1600, 1200], // 8.888x
+            zoom: 2,
+        },
     ];
     // sets title to "earthwalker"
     let titleInterval;
@@ -47,8 +65,8 @@
     $: locStorage.storedMapSize = storedMapSize;
     $: curMapSize = shrinkMap && !mapFocused ? 1 : storedMapSize;
     $: if (curMapSize && leafletMap) {
-        floatingContainer.style.width = mapSizes[curMapSize][0] + "px";
-        floatingContainer.style.height = mapSizes[curMapSize][1] + "px";
+        floatingContainer.style.width = mapSizes[curMapSize].dimensions[0] + "px";
+        floatingContainer.style.height = mapSizes[curMapSize].dimensions[1] + "px";
         leafletMap.invalidateSize()
     };
 
@@ -182,7 +200,8 @@
             } else if ($globalMap.Polygon) {
                 leafletMap.fitBounds(map_poly.getBounds());
             } else {
-                leafletMap.setView([0.0, 0.0], .1);
+                // Would use fitWorld() here, but the map is in its unfocused state, so it would just use the small map dimensions
+                leafletMap.setView([0.0, 0.0], mapSizes[storedMapSize].zoom);
             }
         }, 100);
 
