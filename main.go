@@ -62,7 +62,7 @@ func main() {
 	// Either defer cleanup for when the program exits...
 	defer badgerdb.Close(db)
 	// Or listen for SIGTERM and also clean up.
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
