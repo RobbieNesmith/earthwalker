@@ -3,8 +3,8 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"log"
-	"math/rand"
 	"net/http"
 
 	"gitlab.com/glatteis/earthwalker/domain"
@@ -80,6 +80,10 @@ func challengeResultFromRequest(r *http.Request) (domain.ChallengeResult, error)
 		return newChallengeResult, fmt.Errorf("failed to decode newChallengeResult from request: %v", err)
 	}
 	newChallengeResult.ChallengeResultID = domain.RandAlpha(10)
-	newChallengeResult.Icon = rand.Intn(199) + 1
+	// Hash nickname into a hue value
+	algorithm := fnv.New32a()
+	algorithm.Write([]byte(newChallengeResult.Nickname))
+	nicknameHash := algorithm.Sum32()
+	newChallengeResult.Icon = int(nicknameHash) % 360
 	return newChallengeResult, nil
 }
