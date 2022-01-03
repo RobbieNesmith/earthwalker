@@ -255,9 +255,13 @@
         }
     }
 
-    // Prevent the escape key from being used to exit street view to a map
     window.addEventListener('keydown', (e) => {
+        // Prevent the escape key from being used to exit street view to a map
         if (e.key === "Escape") {
+            e.stopImmediatePropagation();
+        }
+        // Prevent CTRL+SHIFT+[1-5] from being used to exit street view to a map
+        if (["Digit1", "Digit2", "Digit3", "Digit4", "Digit5"].includes(e.code) && e.ctrlKey && e.shiftKey) {
             e.stopImmediatePropagation();
         }
     }, { capture: true });
