@@ -94,6 +94,41 @@ func (store MapStore) Get(mapID string) (domain.Map, error) {
 	return foundMap, nil
 }
 
+// Gets []domain.Map of all maps to display on main page
+func (store MapStore) GetAll() ([]domain.Map, error) {
+	results := make([]domain.Map, 0)
+	err := store.DB.View(func(txn *badger.Txn) error {
+		opts := badger.DefaultIteratorOptions
+		opts.PrefetchSize = 10
+		it := txn.NewIterator(opts)
+		defer it.Close()
+		for it.Rewind(); it.Valid(); it.Next() {
+			item := it.Item()
+			key := item.Key()
+			if !bytes.HasPrefix(key, []byte(mapPrefix)) {
+				continue
+			}
+			val, err := item.ValueCopy(nil)
+			if err != nil {
+				return err
+			}
+			var foundMap domain.Map
+			gob.Register(map[string]interface{}{})
+			gob.Register([]interface{}{})
+			err = gob.NewDecoder(bytes.NewBuffer(val)).Decode(&foundMap)
+			if err != nil {
+				return err
+			}
+			results = append(results, foundMap)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to read maps from badger DB: %v", err)
+	}
+	return results, nil
+}
+
 // ChallengeStore badger implementation (see domain)
 type ChallengeStore struct {
 	DB *badger.DB

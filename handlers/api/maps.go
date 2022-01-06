@@ -21,6 +21,17 @@ func (handler Maps) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			sendError(w, "missing map id", http.StatusBadRequest)
 			return
 		}
+		// return MapStore.GetAll if path is /all 
+		if mapID == "all" {
+			foundMaps, err := handler.MapStore.GetAll()
+			if err != nil {
+				sendError(w, "failed to get maps from store", http.StatusInternalServerError)
+				log.Printf("Failed to get maps from store: %v\n", err)
+				return
+			}
+			json.NewEncoder(w).Encode(foundMaps)
+			return
+		}
 		foundMap, err := handler.MapStore.Get(mapID)
 		if err != nil {
 			sendError(w, "failed to get map from store", http.StatusInternalServerError)

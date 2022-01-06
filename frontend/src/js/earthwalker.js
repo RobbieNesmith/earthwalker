@@ -208,6 +208,11 @@ export class EarthwalkerAPI {
         return getObject(this.mapsURL+"/"+mapID);
     }
 
+    // get all maps from server
+    getMaps() {
+        return getObject(this.mapsURL+"/all");
+    }
+
     // post new map object to server
     postMap(map) {
         return postObject(this.mapsURL, map);

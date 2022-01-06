@@ -90,6 +90,7 @@ type Map struct {
 type MapStore interface {
 	Insert(Map) error
 	Get(mapID string) (Map, error)
+	GetAll() ([]Map, error)
 }
 
 // Challenge is a list of coordinates of panos.
