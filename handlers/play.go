@@ -157,7 +157,7 @@ func floatToString(number float64) string {
 // buildURL builds google street view urls from coordinates
 func buildURL(location domain.Coords) string {
 
-	template := "https://www.google.com/maps/@%f,%f,3a,90y,0h,90t/data=!3m7!1e1!3m5!1s%s!2e0!3e11!7i3512!8i894"
+	template := "https://www.google.com/maps/@%f,%f,3a,90y,0h,90t/data=!3m7!1e1!3m5!1s%s!2e0!3e11!7i3512!8i894?hl=en"
 	return fmt.Sprintf(template, location.Lat, location.Lng, location.PanoID)
 
 	// 	baseURL, err := url.Parse("https://www.google.com/maps")
