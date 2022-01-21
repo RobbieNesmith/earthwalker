@@ -1,7 +1,7 @@
 <script>
     // TODO: this file is getting out of hand
 
-    import { onMount } from 'svelte';
+    import { onMount, tick } from 'svelte';
     import { ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
     import { calcTotalScore, showPolygonOnMap } from '../js/earthwalker';
     import L from 'leaflet';
@@ -13,30 +13,12 @@
     let totalScore = 0;
     // map sizing
     const mapSizes = [
-        {
-            dimensions: [180, 135],  // 1x (can't be used)
-            zoom: 0, // Zoom can only be set to integers without using fractional zoom: https://leafletjs.com/examples/zoom-levels/
-        },
-        {
-            dimensions: [300, 225], // 1.666x
-            zoom: 0,
-        },
-        {
-            dimensions: [500, 375], // 2.777x
-            zoom: 1,
-        },
-        {
-            dimensions: [800, 600], // 4.444x
-            zoom: 1,
-        },
-        {
-            dimensions: [1200, 900], // 6.666x
-            zoom: 2,
-        },
-        {
-            dimensions: [1600, 1200], // 8.888x
-            zoom: 2,
-        },
+        [180, 135], // 1x 
+        [300, 225], // 1.666x
+        [500, 375], // 2.777x
+        [800, 600], // 4.444x
+        [1200, 900], // 6.666x
+        [1600, 1200], // 8.888x
     ];
     // sets title to "earthwalker"
     let titleInterval;
@@ -65,8 +47,8 @@
     $: locStorage.storedMapSize = storedMapSize;
     $: curMapSize = shrinkMap && !mapFocused ? 1 : storedMapSize;
     $: if (curMapSize && leafletMap) {
-        floatingContainer.style.width = mapSizes[curMapSize].dimensions[0] + "px";
-        floatingContainer.style.height = mapSizes[curMapSize].dimensions[1] + "px";
+        floatingContainer.style.width = mapSizes[curMapSize][0] + "px";
+        floatingContainer.style.height = mapSizes[curMapSize][1] + "px";
         leafletMap.invalidateSize()
     };
 
@@ -158,7 +140,7 @@
 
     // The leaflet minimap!
     function createMinimap() {
-        leafletMap = L.map("leaflet-map");
+        leafletMap = L.map("leaflet-map", { zoomSnap: 0.25 }); // zoomSnap enables fractional zoom: https://leafletjs.com/examples/zoom-levels/
 
         // Load marker if it was previously stored (see reload button)
         let oldMarker = null;
@@ -193,15 +175,20 @@
         let map_poly = showPolygonOnMap(leafletMapPolyGroup, $globalMap.Polygon);
 
         // Zoom out map
-        setTimeout(function() {
+        setTimeout(async function() {
             leafletMap.invalidateSize();
             if (oldMarker) {
                 leafletMap.setView(oldMarker.mapCenter, oldMarker.mapZoom);
             } else if ($globalMap.Polygon) {
-                leafletMap.fitBounds(map_poly.getBounds());
+                curMapSize = storedMapSize; // Temporarily restore map to preferred size when focused
+                await tick(); // Trigger map container resize through Svelte reactive variable
+                leafletMap.fitBounds(map_poly.getBounds()); // Fit the map to the polygon
+                curMapSize = 1; // Reset mapSize to unfocused size
             } else {
-                // Would use fitWorld() here, but the map is in its unfocused state, so it would just use the small map dimensions
-                leafletMap.setView([0.0, 0.0], mapSizes[storedMapSize].zoom);
+                curMapSize = storedMapSize; // Temporarily restore map to preferred size when focused
+                await tick(); // Trigger map container resize through Svelte reactive variable
+                leafletMap.fitWorld(); // Fit the map to the world
+                curMapSize = 1; // Reset mapSize to unfocused size
             }
         }, 100);
 
@@ -254,17 +241,6 @@
             }
         }
     }
-
-    window.addEventListener('keydown', (e) => {
-        // Prevent the escape key from being used to exit street view to a map
-        if (e.key === "Escape") {
-            e.stopImmediatePropagation();
-        }
-        // Prevent CTRL+SHIFT+[1-5] from being used to exit street view to a map
-        if (["Digit1", "Digit2", "Digit3", "Digit4", "Digit5"].includes(e.code) && e.ctrlKey && e.shiftKey) {
-            e.stopImmediatePropagation();
-        }
-    }, { capture: true });
 </script>
 
 <svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight}/>
