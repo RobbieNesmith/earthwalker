@@ -4,6 +4,19 @@
 <!-- <link rel="stylesheet" href="/public/modify_frontend/modify.css"> -->
 <link rel="stylesheet" href="/public/bundle-[custom-hash].css">
 
-<!-- The main.js must be loaded before Google libraries so we can get priority event listeners -->
-<script defer src="/public/main-[custom-hash].js"></script>
+<!-- We must set these before we load any libraries so we can get priority event listeners -->
+<script>
+    window.addEventListener('keydown', (e) => {
+        // Prevent the escape key from being used to exit street view to a map
+        if (e.key === "Escape") {
+            e.stopImmediatePropagation();
+        }
+        // Prevent CTRL+SHIFT+[1-5] from being used to exit street view to a map
+        if (["Digit1", "Digit2", "Digit3", "Digit4", "Digit5"].includes(e.code) && e.ctrlKey && e.shiftKey) {
+            e.stopImmediatePropagation();
+        }
+    }, { capture: true });
+</script>
+
 <script src="https://maps.google.com/maps/api/js"></script>
+<script defer src="/public/main-[custom-hash].js"></script>
