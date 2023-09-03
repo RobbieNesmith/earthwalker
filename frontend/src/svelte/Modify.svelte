@@ -198,6 +198,9 @@
         let compass = document.getElementById("compass");
         compass.parentNode.removeChild(compass);
         compassContainer.appendChild(compass);
+
+        let omniboxContainer = document.getElementById("omnibox-container");
+        omniboxContainer.parentNode.removeChild(omniboxContainer);
         
         // score, round number, and timer
         // TODO: can we use an absolute timer instead of this interval?
