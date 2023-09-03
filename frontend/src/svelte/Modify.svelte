@@ -96,7 +96,7 @@
 
     // Sometimes, the google scripts crash on startup. Just reload the page if that happens.
     window.onerror = function(e) {
-        if (e.includes("Timer")) {
+        if (e.includes("Timer") || e.includes("addEventListener")) {
             location.reload(false);
         }
     };
