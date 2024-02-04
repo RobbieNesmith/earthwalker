@@ -223,6 +223,10 @@
 
     <br>
 
+    All maps show up on the main page.
+
+    <br>
+
     <form on:submit|preventDefault={handleFormSubmit} method="post">
 
         <div class="form-group">

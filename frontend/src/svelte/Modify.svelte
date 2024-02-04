@@ -1,6 +1,5 @@
 <script>
     // TODO: this file is getting out of hand
-
     import { onMount, tick } from 'svelte';
     import { ewapi, globalMap, globalChallenge, globalResult } from '../js/stores.js';
     import { calcTotalScore, showPolygonOnMap } from '../js/earthwalker';
@@ -24,6 +23,8 @@
     let titleInterval;
     // decrements timeRemaining once per second
     let timerInterval;
+    // creates minimap
+    let minimapTimeout;
 
     // DOM elements
     let floatingContainer;
@@ -90,13 +91,14 @@
     onMount(async () => {
         tileServerURL = (await $ewapi.getTileServer($globalMap.ShowLabels)).tileserver;
         totalScore = calcTotalScore($globalResult.Guesses, $globalChallenge.Places, $globalMap.GraceDistance, $globalMap.Area);
-        titleInterval = setInterval(setTitle, 100);
-        createMinimap();
+        titleInterval = setInterval(setTitle, 200);
+        minimapTimeout = setTimeout(createMinimap, 1000)
     });
 
     // Sometimes, the google scripts crash on startup. Just reload the page if that happens.
     window.onerror = function(e) {
-        if (e.includes("Timer") || e.includes("addEventListener")) {
+        var isSafari = window.safari !== undefined;
+        if (e.includes("Timer") || (isSafari && e.includes("addEventListener"))) {
             location.reload(false);
         }
     };
@@ -243,7 +245,7 @@
                 leafletMap.removeLayer(leafletMapPolyGroup);
             }
         }
-    }
+        }
 </script>
 
 <svelte:window bind:innerWidth={innerWidth} bind:innerHeight={innerHeight}/>
