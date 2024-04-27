@@ -37,7 +37,7 @@ const MAX_LATLNG_ATTEMPTS = 1000000;
 //       This TIF is 6.5mb.
 //       At minimum, cache it.
 export async function loadGeoTIF(loc) {
-    const response = await fetch("/public/assets/nasa_pop_data.tif");
+    const response = await fetch("/public/assets/nasa_pop_data_zero_ocean.tif");
     const arrayBuffer = await response.arrayBuffer();
     return await GeoTIFF.fromArrayBuffer(arrayBuffer);
 }
