@@ -172,9 +172,9 @@ export async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, ma
     return new google.maps.LatLng(lnglat[1], lnglat[0]);
 }
 
-// get a random google.maps.LatLng, anywhere
+// get a random google.maps.LatLng, anywhere (minus lat limit)
 export function getRandomLngLat() {
     let randomLng = (Math.random() * 360 - 180);
-    let randomLat = (Math.random() * 180 - 90);
+    let randomLat = (Math.random() * (LAT_LIMIT * 2) - LAT_LIMIT);
     return [randomLng, randomLat];
 }
