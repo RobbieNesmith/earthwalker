@@ -159,11 +159,54 @@ export async function getRandomConstrainedLatLng(polygon, popTIF, minDensity, ma
         let density = (await getLocationPopulation(popTIF, lnglat[1], lnglat[0])) * 100;
         return density <= maxDensity && density >= minDensity;
     }
+
+    async function optimizeLngLat(lnglat, iteration, kernelSize, maxIterations) {
+      const middle = (kernelSize - 1) / 2;
+      let nearbyDensities = [];
+      let highestOffset = [0,0];
+      let highestDensity = 0;
+      for (let latIndex = 0; latIndex < kernelSize; latIndex++) {
+        const latOffset = (latIndex - middle) * 0.1;
+        nearbyDensities.push([]);
+        for (let lngIndex = 0; lngIndex < kernelSize; lngIndex++) {
+          const lngOffset = (lngIndex - middle) * 0.1;
+          let checkLng = lnglat[0] + lngOffset % 360;
+          if (checkLng < 0) {
+            checkLng += 360;
+          }
+          let checkLat = lnglat[1] + latOffset;
+          const density = (await getLocationPopulation(popTIF, checkLat, checkLng)) * 100;
+          if (density > 90) {
+          }
+          if (density > highestDensity) {
+            highestDensity = density;
+            highestOffset = [lngOffset, latOffset];
+          }
+          nearbyDensities[nearbyDensities.length - 1].push(density);
+        }
+      }
+      // If center density meets requirements, use this location
+      if (nearbyDensities[middle][middle] <= maxDensity && nearbyDensities[middle][middle] >= minDensity) {
+        return lnglat;
+      }
+      // If best point is center point, use this location
+      if (highestOffset[0] == 0 && highestOffset[1] == 0) {
+        return lnglat;
+      }
+      const bestLngLat = {0: lnglat[0] + highestOffset[0], 1: lnglat[1] + highestOffset[1], previous: lnglat};
+      // If we've maxed out iterations, return the best point
+      if (iteration >= maxIterations) {
+        return bestLngLat;
+      }
+      // Otherwise, try to optimize the best point
+      return optimizeLngLat(bestLngLat, iteration + 1, kernelSize, maxIterations);
+    }
     
     let attempts = 0;
     let lnglat;
     do {
         lnglat = getRandomLngLatInBounds();
+        lnglat = await optimizeLngLat(lnglat, 1, 5, 5);
         if (attempts > MAX_LATLNG_ATTEMPTS) {
             return null;
         }
