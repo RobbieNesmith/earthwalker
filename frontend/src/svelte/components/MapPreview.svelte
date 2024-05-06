@@ -42,5 +42,6 @@
             {map.TimeLimit > 0 ? `Time limit: ${Math.floor(map.TimeLimit / 60)}:${Math.floor(map.TimeLimit % 60).toString().padStart(2, '0')}` : 'No Time Limit'}<br>
         </p>
         <a href="/createchallenge?mapid={map.MapID}" class="btn btn-primary">Use Map</a>
+        <a href="/editmap?mapid={map.MapID}" class="btn btn-secondary">Edit Map</a>
     </div>
 </div>
