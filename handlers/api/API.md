@@ -6,6 +6,7 @@ GET /api/config/tileserver : get TileServerURL
 GET /api/config/nolabeltileserver : get NoLabelTileServerURL  
 
 POST /api/maps : new Map from JSON  
+GET  /api/maps/all : get []Map of all Maps
 GET  /api/maps/{id} : get Map by MapID  
 
 POST /api/challenges : new Challenge from JSON (also inserts ChallengePlaces)  
