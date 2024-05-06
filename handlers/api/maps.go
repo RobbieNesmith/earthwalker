@@ -64,7 +64,9 @@ func mapFromRequest(r *http.Request) (domain.Map, error) {
 	if err != nil {
 		return newMap, fmt.Errorf("failed to decode newMap from request: %v", err)
 	}
-	// we want to make sure we don't take the ID from the client request
-	newMap.MapID = domain.RandAlpha(10)
+	// Set the MapID if none provided
+	if (newMap.MapID == "") {
+		newMap.MapID = domain.RandAlpha(10)
+	}
 	return newMap, nil
 }

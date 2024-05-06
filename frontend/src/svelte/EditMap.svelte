@@ -42,7 +42,7 @@
 
     onMount(async () => {
         let searchParams = new URLSearchParams(window.location.search);
-        let mapID = searchParams.get("mapID");
+        let mapID = searchParams.get("mapid");
         mapSettings = (await $ewapi.getMap(mapID));
         previewMap = L.map("bounds-map", {center: [0, 0], zoom: 1});
         let tileServer = (await $ewapi.getTileServer()).tileserver;
