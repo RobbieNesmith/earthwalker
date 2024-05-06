@@ -52,6 +52,8 @@
         previewPolyGroup = L.layerGroup().addTo(previewMap);
         lasso = L.lasso(previewMap);
         previewMap.on('lasso.finished', handleLassoFinish);
+        showPolygonOnMap();
+        loadPolygonFromSavedValue();
     });
 
     // collates createmap form data into a JSON object, 
@@ -136,6 +138,16 @@
 
         showPolygonOnMap();
         submitDisabled = false;
+    }
+
+    function loadPolygonFromSavedValue() {
+      if (!mapSettings.Polygon) {
+        return;
+      }
+
+      for (let part of mapSettings.Polygon.geometry.coordinates) {
+        userdrawnPolygons.push(part[0]);
+      }
     }
 
     async function updatePolygonFromLocStrings() {
