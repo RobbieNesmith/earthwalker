@@ -44,6 +44,13 @@ func getBytes(db *badger.DB, key string) ([]byte, error) {
 	return byteSlice, err
 }
 
+func deleteKey(db *badger.DB, key string) error {
+	err := db.Update(func(txn *badger.Txn) error {
+		return txn.Delete([]byte(key))
+	})
+	return err
+}
+
 // Init opens and returns a badger database connection
 // don't forget to close it
 func Init(path string) (*badger.DB, error) {
@@ -127,6 +134,15 @@ func (store MapStore) GetAll() ([]domain.Map, error) {
 		return nil, fmt.Errorf("failed to read maps from badger DB: %v", err)
 	}
 	return results, nil
+}
+
+// Delete a map from store's badger db
+func (store MapStore) Delete(mapID string) error {
+	err := deleteKey(store.DB, mapPrefix + mapID)
+	if err != nil {
+		return fmt.Errorf("failed to delete map from badger DB: %v", err)
+	}
+	return nil
 }
 
 // ChallengeStore badger implementation (see domain)

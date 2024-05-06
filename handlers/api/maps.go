@@ -53,6 +53,28 @@ func (handler Maps) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		json.NewEncoder(w).Encode(newMap)
+	case http.MethodDelete:
+		mapID, _ := shiftPath(r.URL.Path)
+		if len(mapID) == 0 || mapID == "/" {
+			sendError(w, "missing map id", http.StatusBadRequest)
+			return
+		}
+
+		_, err := handler.MapStore.Get(mapID)
+		
+		if err != nil {
+			sendError(w, "map does not exist", http.StatusNotFound)
+			log.Printf("Failed to delete map from store: %v\n", err)
+			return
+		}
+
+		err = handler.MapStore.Delete(mapID)
+		if err != nil {
+			sendError(w, "failed to delete map from store", http.StatusInternalServerError)
+			log.Printf("Failed to delete map from store: %v\n", err)
+			return
+		}
+		return
 	default:
 		sendError(w, "api/maps endpoint does not exist.", http.StatusNotFound)
 	}
