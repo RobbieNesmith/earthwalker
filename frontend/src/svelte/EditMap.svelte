@@ -90,6 +90,16 @@
             });
     }
 
+    function handleDeleteSubmit() {
+      $ewapi.deleteMap(mapSettings.MapID)
+        .then( (response) => {
+          if (!(response && response.success)) {
+            alert("Failed to delete map?!");
+          }
+          $loc = "/";
+        });
+    }
+
     function handleLocStringUpdate() {
         if (locString != oldLocString) {
             submitDisabled = true;
@@ -443,6 +453,9 @@
 
         <button id="submit-button" type="submit" class="btn btn-primary" style="margin-bottom: 2em;" disabled={submitDisabled}>Save Map</button>
 
+    </form>
+    <form on:submit|preventDefault={handleDeleteSubmit}>
+        <button id="submit-button" type="submit" class="btn btn-danger" style="margin-bottom: 2em;" disabled={submitDisabled}>Delete Map</button>
     </form>
     <!-- <link rel="stylesheet" href="public/leaflet/leaflet.css"/> -->
     </div>

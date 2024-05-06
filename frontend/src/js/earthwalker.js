@@ -183,6 +183,18 @@ export async function postObject(url, object) {
     return {}
 }
 
+// deletes to the given URL
+export async function deleteObject(url) {
+  let response = await fetch(url, {
+    method: "DELETE",
+  });
+  if (response.ok) {
+    return {success: true};
+  }
+
+  return {success: false}
+}
+
 export function orderRounds(arrWithRoundNums) {
     return arrWithRoundNums.sort((a, b) => a.RoundNum - b.RoundNum);
 }
@@ -216,6 +228,11 @@ export class EarthwalkerAPI {
     // post new map object to server
     postMap(map) {
         return postObject(this.mapsURL, map);
+    }
+
+    // delete map object from server by id
+    deleteMap(mapID) {
+      return deleteObject(this.mapsURL+"/"+mapID);
     }
 
     async getChallenge(challengeID) {
