@@ -8,6 +8,7 @@
 	import { EarthwalkerAPI, getChallengeID, getChallengeResultID } from '../js/earthwalker';
 
 	import CreateMap from './CreateMap.svelte'
+	import EditMap from './EditMap.svelte'
 	import CreateChallenge from './CreateChallenge.svelte'
 	import Resume from './Resume.svelte'
 	import Join from './Join.svelte'
@@ -92,6 +93,8 @@
 					<Resume/>
 				{:else if $loc.startsWith("/createmap")}
 					<CreateMap/>
+				{:else if $loc.startsWith("/editmap")}
+					<EditMap/>
 				{:else if $loc.startsWith("/createchallenge")}
 					<CreateChallenge/>
 				{:else if $loc.startsWith("/join")}
