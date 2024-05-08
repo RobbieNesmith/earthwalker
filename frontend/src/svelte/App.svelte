@@ -3,6 +3,7 @@
 	import { writable } from 'svelte/store';
 
 	import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+	import "../../node_modules/bootstrap/dist/js/bootstrap.bundle.js";
 	import "../../node_modules/leaflet/dist/leaflet.css";
 	import { loc, ewapi, globalMap, globalChallenge, globalResult } from '../js/stores';
 	import { EarthwalkerAPI, getChallengeID, getChallengeResultID } from '../js/earthwalker';

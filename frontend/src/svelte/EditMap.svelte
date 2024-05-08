@@ -39,6 +39,7 @@
     let previewPolyGroup;
     let advancedHidden = true;
     let submitDisabled = false;
+    let deleteOpen = false;
 
     onMount(async () => {
         let searchParams = new URLSearchParams(window.location.search);
@@ -90,7 +91,16 @@
             });
     }
 
+    function openDeleteModal() {
+      deleteOpen = true;
+    }
+
+    function closeDeleteModal() {
+      deleteOpen = false;
+    }
+
     function handleDeleteSubmit() {
+      deleteOpen = false;
       $ewapi.deleteMap(mapSettings.MapID)
         .then( (response) => {
           if (!(response && response.success)) {
@@ -451,12 +461,35 @@
 
         <input id="hidden-input" type="hidden" name="result" value=""/>
 
-        <button id="submit-button" type="submit" class="btn btn-primary" style="margin-bottom: 2em;" disabled={submitDisabled}>Save Map</button>
-
+        <div style="margin-bottom: 2em;">
+          <button id="submit-button" type="submit" class="btn btn-primary" disabled={submitDisabled}>Save Map</button>
+          <button id="delete-prompt" type="button" class="btn btn-danger" on:click={openDeleteModal}>Delete Map</button>
+        </div>
     </form>
-    <form on:submit|preventDefault={handleDeleteSubmit}>
-        <button id="submit-button" type="submit" class="btn btn-danger" style="margin-bottom: 2em;" disabled={submitDisabled}>Delete Map</button>
-    </form>
+    {#if deleteOpen}
+    <div class="modal" style="display:block;" id="delete-modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Delete This Map?</h1>
+            <button type="button" class="close" aria-label="Close" on:click={closeDeleteModal}>
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this map? This will also delete any challenges and results associated with the map.</p>
+          </div>
+          <div class="modal-footer">
+            <form on:submit|preventDefault={handleDeleteSubmit}>
+                <button id="delete-cancel-button" type="button" class="btn btn-secondary" on:click={closeDeleteModal}>Cancel</button>
+                <button id="delete-submit-button" type="submit" class="btn btn-danger" disabled={submitDisabled}>Delete Map</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+    {/if}
     <!-- <link rel="stylesheet" href="public/leaflet/leaflet.css"/> -->
     </div>
 </main>
